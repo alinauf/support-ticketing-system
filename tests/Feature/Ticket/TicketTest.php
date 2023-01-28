@@ -62,7 +62,7 @@ test('retreive ticket', function () {
 })->group('tickets');
 
 
-test('add client reply to a ticket', function (User $user) {
+test('add reply to a ticket', function (User $user) {
     if ($user->isAdmin()) {
         $user = createClientUser();
     }
@@ -107,6 +107,7 @@ test('client visits dashboard and can see his/her tickets', function () {
 
     $response = test()->actingAs($user)->get('/dashboard');
     $response->assertStatus(200);
+    $response->assertSeeLivewire('client.ticket.index');
 
     // The user should see the tickets section header
     $response->assertSee('Support Tickets');
