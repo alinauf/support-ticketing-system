@@ -10,4 +10,15 @@ class Ticket extends Model
 {
     use HasFactory;
     use SoftDeletes;
+
+    public function user()
+    {
+        $this->belongsTo(User::class);
+    }
+
+    public function replies()
+    {
+        $this->hasMany(TicketReply::class);
+    }
+
 }
