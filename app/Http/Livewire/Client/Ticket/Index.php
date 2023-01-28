@@ -12,10 +12,16 @@ class Index extends Component
     use WithPagination;
 
     public $search;
+    public $user;
     public $pending = false;
     public $resolved = false;
 
     public $orderByDesc = true;
+
+    public function mount($user)
+    {
+        $this->user = $user;
+    }
 
     public function onPendingClick()
     {
@@ -61,7 +67,7 @@ class Index extends Component
             'orderBy' => $orderBy
         ];
 
-        $tickets = $ticketService->listTickets($this->search, $searchFilters, Auth::id());
+        $tickets = $ticketService->listTickets($this->search, $searchFilters, $this->user->id);
         return view('livewire.client.ticket.index', ['tickets' => $tickets]);
     }
 }

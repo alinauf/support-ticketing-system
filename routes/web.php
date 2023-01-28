@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\TicketController;
+use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -25,9 +26,19 @@ Route::get('/dashboard', function () {
 
 Route::resource('tickets', TicketController::class)->middleware(['auth', 'verified']);
 
-Route::get('/admin-dashboard', function () {
-    return view('admin-dashboard');
-})->middleware(['auth', 'verified', 'admin'])->name('admin-dashboard');
+
+Route::middleware(['auth', 'verified', 'admin'])->group(function () {
+    Route::get('/admin-dashboard', function () {
+        return view('admin-dashboard');
+    })->name('admin-dashboard');
+
+    Route::get('/users', [UserController::class, 'index'])
+        ->name('users');
+
+    Route::get('/users/{user}', [UserController::class, 'show'])
+        ->name('users.show');
+
+});
 
 
 Route::middleware('auth')->group(function () {

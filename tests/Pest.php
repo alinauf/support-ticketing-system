@@ -109,6 +109,11 @@ function createMultipleTickets($userId = null, $count = 1)
         ->create();
 }
 
+function createMultipleUsers($count = 1)
+{
+    return User::factory()->count($count)->create();
+}
+
 
 function clientLogin()
 {

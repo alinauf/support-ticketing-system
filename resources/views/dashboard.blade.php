@@ -21,7 +21,10 @@
                     </button>
                 </div>
             </div>
-            <livewire:client.ticket.index/>
+            <?php
+                $user = \Illuminate\Support\Facades\Auth::user();
+            ?>
+            <livewire:client.ticket.index :user="$user"/>
         </div>
 
         {{-- Create Ticket Modal --}}
