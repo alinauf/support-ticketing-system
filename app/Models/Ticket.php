@@ -19,12 +19,12 @@ class Ticket extends Model
 
     public function user()
     {
-        $this->belongsTo(User::class);
+        return $this->belongsTo(User::class);
     }
 
     public function ticketReplies()
     {
-        $this->hasMany(TicketReply::class);
+        return $this->hasMany(TicketReply::class);
     }
 
 }

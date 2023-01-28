@@ -2,6 +2,7 @@
 
 use App\Models\Ticket;
 use App\Models\User;
+use Illuminate\Database\Eloquent\Factories\Sequence;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Hash;
 use Tests\TestCase;
@@ -91,7 +92,21 @@ function createTicket($userId = null)
 {
     return Ticket::factory([
         'user_id' => $userId ?? createClientUser()->id,
-    ])->create();
+    ])
+        ->create();
+}
+
+function createMultipleTickets($userId = null, $count = 1)
+{
+    return Ticket::factory([
+        'user_id' => $userId ?? createClientUser()->id,
+    ])
+        ->state(new Sequence(
+            ['is_open' => true],
+            ['is_open' => false],
+        ))
+        ->count($count)
+        ->create();
 }
 
 

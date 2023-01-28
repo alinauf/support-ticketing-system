@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Models\Ticket;
 use App\Models\TicketReply;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
@@ -14,9 +15,34 @@ class TicketService extends Service
         $this->setModel(new Ticket());
     }
 
+    public function listTickets($search, $searchFilters, $userId = null, $paginatePages = 10)
+    {
+        $checkTicketStatus = $searchFilters['resolved'] || $searchFilters['pending'];
+        $tickets = Ticket::query();
+
+        if (isset($userId)) {
+            $tickets->where('user_id', $userId);
+        }
+
+        if ($checkTicketStatus) {
+            if ($searchFilters['resolved']) {
+                $tickets->where('is_open', false);
+            } elseif ($searchFilters['pending']) {
+                $tickets->where('is_open', true);
+            }
+        }
+
+        if ($search) {
+            $tickets->where('title', 'like', '%' . $search . '%');
+        }
+
+        $tickets->orderBy('created_at', $searchFilters['orderBy']);
+
+        return $tickets->paginate($paginatePages);
+    }
+
     public function store($data): array
     {
-
         DB::beginTransaction();
         try {
             $ticket = Ticket::create([
@@ -84,6 +110,9 @@ class TicketService extends Service
     public function addReply($ticketId, $data): bool|array
     {
         DB::beginTransaction();
+
+        createTicket();
+
 
         $ticket = Ticket::where('id', $ticketId)->first();
 

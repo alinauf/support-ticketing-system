@@ -33,6 +33,7 @@
         {{ $slot }}
     </main>
 </div>
+<x-flash-message></x-flash-message>
 @livewireScripts
 </body>
 </html>
