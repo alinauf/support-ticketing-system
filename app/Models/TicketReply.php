@@ -13,9 +13,14 @@ class TicketReply extends Model
 
     protected $table = 'ticket_replies';
 
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+
     public function ticket()
     {
-        $this->belongsTo(Ticket::class);
+        return $this->belongsTo(Ticket::class);
     }
 
 }

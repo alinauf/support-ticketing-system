@@ -4,6 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Models\Ticket;
 use App\Services\TicketService;
+use Illuminate\Contracts\Foundation\Application;
+use Illuminate\Contracts\View\Factory;
+use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -51,18 +54,18 @@ class TicketController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param \App\Models\Ticket $ticket
-     * @return \Illuminate\Http\Response
+     * @param Ticket $ticket
+     * @return Application|Factory|View
      */
     public function show(Ticket $ticket)
     {
-        //
+        return view('tickets.show', ['ticket' => $ticket]);
     }
 
     /**
      * Show the form for editing the specified resource.
      *
-     * @param \App\Models\Ticket $ticket
+     * @param Ticket $ticket
      * @return \Illuminate\Http\Response
      */
     public function edit(Ticket $ticket)
@@ -74,7 +77,7 @@ class TicketController extends Controller
      * Update the specified resource in storage.
      *
      * @param Request $request
-     * @param \App\Models\Ticket $ticket
+     * @param Ticket $ticket
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, Ticket $ticket)

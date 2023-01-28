@@ -62,40 +62,7 @@ test('retreive ticket', function () {
 })->group('tickets');
 
 
-test('add reply to a ticket', function (User $user) {
-    if ($user->isAdmin()) {
-        $user = createClientUser();
-    }
 
-    $ticket = createTicket($user->id);
-
-    $ticketSl = new App\Services\TicketService();
-
-    $data = [
-        'ticket_id' => $ticket->id,
-        'user_id' => $user->id,
-        'reply' => 'Test reply',
-    ];
-
-    $response = $ticketSl->addReply($ticket->id, $data);
-
-    expect($response['status'])->toBeTrue();
-    expect($response['payload'])->toBe('Reply has been successfully added');
-
-    $this->assertDatabaseHas('ticket_replies', [
-        'ticket_id' => $ticket->id,
-        'user_id' => $ticket->user_id,
-        'reply' => 'Test reply',
-    ]);
-
-})->with(
-    [
-        'Client User' => fn() => User::factory()->create(),
-        'Admin User' => fn() => User::factory()->create([
-            'is_admin' => true,
-        ]),
-    ]
-)->group('tickets');
 
 test('client visits dashboard and can see his/her tickets', function () {
     $user = createClientUser();

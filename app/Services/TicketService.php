@@ -111,9 +111,6 @@ class TicketService extends Service
     {
         DB::beginTransaction();
 
-        createTicket();
-
-
         $ticket = Ticket::where('id', $ticketId)->first();
 
         if (!$ticket) {
