@@ -1,6 +1,8 @@
 <?php
 
+use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Hash;
 use Tests\TestCase;
 
 /*
@@ -42,7 +44,48 @@ expect()->extend('toBeOne', function () {
 |
 */
 
-function something()
+function createAdminUser()
 {
-    // ..
+    $user = User::factory(
+        [
+            'name' => 'Admin',
+            'email' => 'info@codingmonkeys.nl',
+            'password' => Hash::make('password'),
+            'is_admin' => true,
+        ]
+    )->create();
+
+    return $user;
 }
+
+function adminLogin()
+{
+    $user = User::factory(
+        [
+            'name' => 'Admin',
+            'email' => 'info@codingmonkeys.nl',
+            'password' => Hash::make('password'),
+            'is_admin' => true,
+        ]
+    )->create();
+
+    return test()->actingAs($user);
+}
+
+function getAdminUser()
+{
+    $user = User::where('is_admin', true)->first();
+    if (!$user) {
+        $user = createAdminUser();
+    }
+    return $user;
+}
+
+
+function clientLogin()
+{
+    $user = User::factory()->create();
+    return test()->actingAs($user);
+}
+
+

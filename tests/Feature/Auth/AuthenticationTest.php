@@ -31,3 +31,24 @@ test('users can not authenticate with invalid password', function () {
 
     $this->assertGuest();
 });
+
+test('admin user should be redirected to admin dashboard ', function () {
+    $user = createAdminUser();
+
+    $response = $this->post('/login', [
+        'email' => $user->email,
+        'password' => 'password',
+    ]);
+
+    $this->assertAuthenticated();
+    $response->assertRedirect(RouteServiceProvider::ADMIN_HOME);
+})->group('admin');
+
+test('admin user should have the email info@codingmonkeys.nl', function () {
+    adminLogin()->assertAuthenticated();
+
+    $user = getAdminUser();
+    
+    expect($user->is_admin)->toBe(1);
+    expect($user->email)->toBe('info@codingmonkeys.nl');
+})->group('admin');
