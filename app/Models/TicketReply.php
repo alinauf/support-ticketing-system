@@ -11,6 +11,8 @@ class TicketReply extends Model
     use HasFactory;
     use SoftDeletes;
 
+    protected $table = 'ticket_replies';
+
     public function ticket()
     {
         $this->belongsTo(Ticket::class);

@@ -48,7 +48,7 @@ test('admin user should have the email info@codingmonkeys.nl', function () {
     adminLogin()->assertAuthenticated();
 
     $user = getAdminUser();
-    
+
     expect($user->is_admin)->toBe(1);
     expect($user->email)->toBe('info@codingmonkeys.nl');
 })->group('admin');

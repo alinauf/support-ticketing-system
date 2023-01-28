@@ -11,12 +11,18 @@ class Ticket extends Model
     use HasFactory;
     use SoftDeletes;
 
+    protected $fillable = [
+        'title',
+        'description',
+        'user_id',
+    ];
+
     public function user()
     {
         $this->belongsTo(User::class);
     }
 
-    public function replies()
+    public function ticketReplies()
     {
         $this->hasMany(TicketReply::class);
     }

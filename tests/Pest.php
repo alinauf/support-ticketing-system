@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Ticket;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Hash;
@@ -79,6 +80,18 @@ function getAdminUser()
         $user = createAdminUser();
     }
     return $user;
+}
+
+function createClientUser()
+{
+    return User::factory()->create();
+}
+
+function createTicket($userId = null)
+{
+    return Ticket::factory([
+        'user_id' => $userId ?? createClientUser()->id,
+    ])->create();
 }
 
 
