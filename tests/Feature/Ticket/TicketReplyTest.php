@@ -2,6 +2,7 @@
 
 
 use App\Http\Livewire\Ticket\Detail;
+use App\Models\Ticket;
 use App\Models\TicketReply;
 use App\Models\User;
 use Livewire\Livewire;
@@ -41,7 +42,7 @@ test('add reply to a ticket', function (User $user) {
     ]
 )->group('tickets');
 
-test('user can visit ticket details view, see the ticket details and add reply', function (User $user) {
+test('user can visit ticket details view, see the ticket details, add reply and resolve ticket', function (User $user) {
 
     if ($user->isAdmin()) {
         $ticket = createTicket(createClientUser()->id);
@@ -77,6 +78,25 @@ test('user can visit ticket details view, see the ticket details and add reply',
         ->set('comment', '')
         ->call('addTicketReply')
         ->assertHasErrors(['comment' => 'required']);
+
+
+    expect(
+        Ticket::where('id', $ticket->id)
+            ->where('is_open', true)
+            ->exists())
+        ->toBeTrue();
+
+    Livewire::test(Detail::class, ['ticket' => $ticket])
+        ->call('resolveTicket')
+        ->assertEmitted('ticketUpdated');
+
+
+    expect(
+        Ticket::where('id', $ticket->id)
+            ->where('is_open', false)
+            ->exists())
+        ->toBeTrue();
+
 
 })->with(
     [

@@ -149,5 +149,41 @@ class TicketService extends Service
 
     }
 
+    public function resolveTicket($ticketId): bool|array
+    {
+        DB::beginTransaction();
+
+        $ticket = Ticket::where('id', $ticketId)->first();
+
+        if (!$ticket) {
+            return [
+                'status' => false,
+                'payload' => 'No ticket found with the given id',
+            ];
+        }
+
+        try {
+            $ticket->is_open = false;
+            $status = $ticket->save();
+        } catch (\Exception $e) {
+            DB::rollback();
+            throw $e;
+        }
+
+        DB::commit();
+
+        if ($status) {
+            return [
+                'status' => true,
+                'payload' => 'Ticket has been successfully resolved',
+            ];
+        } else {
+            return [
+                'status' => false,
+                'payload' => 'There was an issue with resolving the ticket',
+            ];
+        }
+    }
+
 
 }

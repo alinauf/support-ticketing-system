@@ -62,8 +62,6 @@ test('retreive ticket', function () {
 })->group('tickets');
 
 
-
-
 test('client visits dashboard and can see his/her tickets', function () {
     $user = createClientUser();
 
@@ -141,4 +139,37 @@ test('retrieve tickets with filters', function ($filterResolved, $filterPending,
     ->group('tickets');
 
 
-test('a user can clost a ticket');
+test('A user can resolve a ticket', function (User $user) {
+
+    if ($user->isAdmin()) {
+        $ticket = createTicket(createClientUser()->id);
+    } else {
+        $ticket = createTicket($user->id);
+    }
+
+    $this->assertDatabaseHas('tickets', [
+        'id' => $ticket->id,
+        'is_open' => true,
+    ]);
+
+    $ticketSl = new App\Services\TicketService();
+
+    $response = $ticketSl->resolveTicket($ticket->id);
+
+    expect($response['status'])->toBeTrue();
+    expect($response['payload'])->toBe('Ticket has been successfully resolved');
+
+    $this->assertDatabaseHas('tickets', [
+        'id' => $ticket->id,
+        'is_open' => false,
+    ]);
+
+})->with(
+    [
+        'Client User' => fn() => User::factory()->create(),
+        'Admin User' => fn() => User::factory()->create([
+            'is_admin' => true,
+        ]),
+    ]
+)
+    ->group('tickets');

@@ -31,6 +31,10 @@ class Detail extends Component
 
     public function resolveTicket()
     {
+        $ticketService = new TicketService();
+        $response = $ticketService->resolveTicket($this->ticket->id);
+        $response['status'] ? session()->flash('success', $response['payload']) : session()->flash('failure', $response['payload']);
+        $this->emitSelf('ticketUpdated');
 
     }
 
