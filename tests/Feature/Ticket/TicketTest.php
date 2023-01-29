@@ -171,5 +171,4 @@ test('A user can resolve a ticket', function (User $user) {
             'is_admin' => true,
         ]),
     ]
-)
-    ->group('tickets');
+)->group('tickets');

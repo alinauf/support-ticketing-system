@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Models\Ticket;
 use App\Models\TicketReply;
+use App\Models\User;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
@@ -183,6 +184,8 @@ class TicketService extends Service
             ];
         }
     }
+
+
 
 
 }
